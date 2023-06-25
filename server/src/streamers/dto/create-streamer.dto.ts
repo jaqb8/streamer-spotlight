@@ -1,7 +1,14 @@
-import { Platform } from '../streamers.model';
+import { IsEnum, IsNotEmpty } from 'class-validator';
+import { StreamingPlatform } from '../streaming-platform.enum';
 
 export class CreateStreamerDto {
+  @IsNotEmpty()
   name: string;
+
+  @IsNotEmpty()
   description: string;
-  platform: Platform;
+
+  @IsNotEmpty()
+  @IsEnum(StreamingPlatform)
+  platform: StreamingPlatform;
 }

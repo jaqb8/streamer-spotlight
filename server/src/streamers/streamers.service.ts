@@ -1,30 +1,57 @@
-import { Injectable } from '@nestjs/common';
-import { Platform, Streamer } from './streamers.model';
-import { v4 as uuidv4 } from 'uuid';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreateStreamerDto } from './dto/create-streamer.dto';
+import { VoteStreamerDto, VoteType } from './dto/vote-streamer.dto';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Streamer } from './streamer.entity';
+import { Repository } from 'typeorm';
+import { v4 as uuid } from 'uuid';
 
 @Injectable()
 export class StreamersService {
-  private streamers: Streamer[] = [];
+  constructor(
+    @InjectRepository(Streamer)
+    private streamersRepository: Repository<Streamer>,
+  ) {}
 
-  getAllStreamers(): Streamer[] {
-    return this.streamers;
+  async getStreamers(): Promise<Streamer[]> {
+    return await this.streamersRepository.find();
   }
 
-  getStreamerById(id: string): Streamer {
-    return this.streamers.find((streamer) => streamer.id === id);
+  async getStreamerById(id: string): Promise<Streamer> {
+    const streamer = await this.streamersRepository.findOne({
+      where: { id },
+    });
+
+    if (!streamer) {
+      throw new NotFoundException(`Streamer with ID "${id}" not found`);
+    }
+    return streamer;
   }
 
-  createStreamer(createStreamerDto: CreateStreamerDto): Streamer {
+  async createStreamer(
+    createStreamerDto: CreateStreamerDto,
+  ): Promise<Streamer> {
     const { name, description, platform } = createStreamerDto;
 
-    const streamer: Streamer = {
-      id: uuidv4(),
+    const streamer = this.streamersRepository.create({
+      id: uuid(),
       name,
       description,
       platform,
-    };
-    this.streamers.push(streamer);
-    return streamer;
+      likes: [],
+      dislikes: [],
+    });
+
+    return await this.streamersRepository.save(streamer);
+  }
+
+  async voteStreamer(id: string, type: VoteType): Promise<Streamer> {
+    const streamer = await this.getStreamerById(id);
+    if (type === VoteType.LIKE) {
+      streamer.likes.unshift('userId');
+    } else if (type === VoteType.DISLIKE) {
+      streamer.dislikes.unshift('userId');
+    }
+    return await this.streamersRepository.save(streamer);
   }
 }
