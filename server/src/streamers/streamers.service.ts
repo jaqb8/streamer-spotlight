@@ -5,6 +5,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Streamer } from './streamer.entity';
 import { Repository } from 'typeorm';
 import { v4 as uuid } from 'uuid';
+import { User } from 'src/auth/user.entity';
 
 @Injectable()
 export class StreamersService {
@@ -30,6 +31,7 @@ export class StreamersService {
 
   async createStreamer(
     createStreamerDto: CreateStreamerDto,
+    user: User,
   ): Promise<Streamer> {
     const { name, description, platform } = createStreamerDto;
 
@@ -40,17 +42,22 @@ export class StreamersService {
       platform,
       likes: [],
       dislikes: [],
+      user,
     });
 
     return await this.streamersRepository.save(streamer);
   }
 
-  async voteStreamer(id: string, type: VoteType): Promise<Streamer> {
+  async voteStreamer(
+    id: string,
+    type: VoteType,
+    user: User,
+  ): Promise<Streamer> {
     const streamer = await this.getStreamerById(id);
     if (type === VoteType.LIKE) {
-      streamer.likes.unshift('userId');
+      streamer.likes.unshift(user.id);
     } else if (type === VoteType.DISLIKE) {
-      streamer.dislikes.unshift('userId');
+      streamer.dislikes.unshift(user.id);
     }
     return await this.streamersRepository.save(streamer);
   }
