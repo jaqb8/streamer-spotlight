@@ -8,6 +8,6 @@ async function bootstrap() {
   app.enableCors(); // TODO: remove this in production
   app.useGlobalPipes(new ValidationPipe());
   app.useGlobalInterceptors(new TransformInterceptor());
-  await app.listen(3000);
+  await app.listen(5001);
 }
 bootstrap();

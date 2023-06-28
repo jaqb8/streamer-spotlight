@@ -1,6 +1,5 @@
 import { DataSource, Repository } from 'typeorm';
 import { User } from './user.entity';
-import { AuthCredentialsDto } from './dto/auth-credentials.dto';
 import {
   ConflictException,
   Injectable,
@@ -8,6 +7,8 @@ import {
 } from '@nestjs/common';
 import { v4 as uuid } from 'uuid';
 import * as bcrypt from 'bcrypt';
+import { sign } from 'crypto';
+import { SignUpDto } from './dto/signup.dto';
 
 const USER_EXISTS_ERROR_CODE = 11000;
 
@@ -17,8 +18,8 @@ export class UserRepository extends Repository<User> {
     super(User, dataSource.createEntityManager());
   }
 
-  async createUser(authCredentialsDto: AuthCredentialsDto): Promise<void> {
-    const { username, password } = authCredentialsDto;
+  async createUser(signUpDto: SignUpDto): Promise<void> {
+    const { username, password } = signUpDto;
 
     const salt = await bcrypt.genSalt();
     const hashedPassword = await bcrypt.hash(password, salt);

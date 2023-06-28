@@ -1,6 +1,10 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { CreateStreamerDto } from './dto/create-streamer.dto';
-import { VoteStreamerDto, VoteType } from './dto/vote-streamer.dto';
+import { VoteType } from './dto/vote-streamer.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Streamer } from './streamer.entity';
 import { Repository } from 'typeorm';
@@ -54,11 +58,33 @@ export class StreamersService {
     user: User,
   ): Promise<Streamer> {
     const streamer = await this.getStreamerById(id);
+
     if (type === VoteType.LIKE) {
+      if (streamer.likes.includes(user.id)) {
+        throw new BadRequestException('You have already liked this streamer.');
+      }
+
+      if (streamer.dislikes.includes(user.id)) {
+        streamer.dislikes = streamer.dislikes.filter(
+          (userId) => userId !== user.id,
+        );
+      }
+
       streamer.likes.unshift(user.id);
     } else if (type === VoteType.DISLIKE) {
+      if (streamer.dislikes.includes(user.id)) {
+        throw new BadRequestException(
+          'You have already disliked this streamer.',
+        );
+      }
+
+      if (streamer.likes.includes(user.id)) {
+        streamer.likes = streamer.likes.filter((userId) => userId !== user.id);
+      }
+
       streamer.dislikes.unshift(user.id);
     }
+
     return await this.streamersRepository.save(streamer);
   }
 }
