@@ -18,13 +18,18 @@ import { configValidationSchema } from './config.schema';
     TypeOrmModule.forRootAsync({
       imports: [ConfigModule],
       inject: [ConfigService],
-      useFactory: async (configService: ConfigService) => ({
-        type: 'mongodb',
-        url: configService.get('MONGO_URI'),
-        synchronize: true,
-        useUnifiedTopology: true,
-        entities: [Streamer, User],
-      }),
+      useFactory: async (configService: ConfigService) => {
+        const isProduction = configService.get('STAGE') === 'prod';
+
+        return {
+          ssl: isProduction,
+          type: 'mongodb',
+          url: configService.get('MONGO_URI'),
+          synchronize: true,
+          useUnifiedTopology: true,
+          entities: [Streamer, User],
+        };
+      },
     }),
     StreamersModule,
     AuthModule,

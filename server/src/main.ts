@@ -5,9 +5,10 @@ import { TransformInterceptor } from './transform.interceptor';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
-  app.enableCors(); // TODO: remove this in production
+  app.enableCors();
   app.useGlobalPipes(new ValidationPipe());
   app.useGlobalInterceptors(new TransformInterceptor());
-  await app.listen(5001);
+  const port = process.env.PORT;
+  await app.listen(port);
 }
 bootstrap();
