@@ -17,7 +17,7 @@ jobs:
         run: cd client && yarn build
         env:
           HTTPS: "true"
-          REACT_APP_BASE_URL: ${{ secrets.REACT_APP_API_URL }}
+          REACT_APP_API_URL: ${{ secrets.REACT_APP_API_URL }}
           PUBLIC_URL: ${{ secrets.PUBLIC_URL }}
 
       - name: Deploy to GitHub Pages
