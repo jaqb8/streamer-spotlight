@@ -33,6 +33,7 @@
     "web-vitals": "^2.1.0",
     "zod": "^3.21.4"
   },
+  "homepage": "https://jaqb8.github.io/streamer-spotlight",
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
