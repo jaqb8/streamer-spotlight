@@ -1,7 +1,7 @@
 {
   "files": {
     "main.css": "https://jaqb8.github.io/streamer-spotlight/static/css/main.f5eb672d.css",
-    "main.js": "https://jaqb8.github.io/streamer-spotlight/static/js/main.c09483d3.js",
+    "main.js": "https://jaqb8.github.io/streamer-spotlight/static/js/main.847dc0bc.js",
     "static/js/787.c4e7f8f9.chunk.js": "https://jaqb8.github.io/streamer-spotlight/static/js/787.c4e7f8f9.chunk.js",
     "static/media/avatar.jpeg": "https://jaqb8.github.io/streamer-spotlight/static/media/avatar.7db1f62b1adb80c52a0b.jpeg",
     "index.html": "https://jaqb8.github.io/streamer-spotlight/index.html",
@@ -9,11 +9,11 @@
     "static/media/tiktok.svg": "https://jaqb8.github.io/streamer-spotlight/static/media/tiktok.55632982d6ba945f34f5933b1633d453.svg",
     "static/media/twitch.svg": "https://jaqb8.github.io/streamer-spotlight/static/media/twitch.a0a35f63712864d8ae7eb5a0aacafd31.svg",
     "main.f5eb672d.css.map": "https://jaqb8.github.io/streamer-spotlight/static/css/main.f5eb672d.css.map",
-    "main.c09483d3.js.map": "https://jaqb8.github.io/streamer-spotlight/static/js/main.c09483d3.js.map",
+    "main.847dc0bc.js.map": "https://jaqb8.github.io/streamer-spotlight/static/js/main.847dc0bc.js.map",
     "787.c4e7f8f9.chunk.js.map": "https://jaqb8.github.io/streamer-spotlight/static/js/787.c4e7f8f9.chunk.js.map"
   },
   "entrypoints": [
     "static/css/main.f5eb672d.css",
-    "static/js/main.c09483d3.js"
+    "static/js/main.847dc0bc.js"
   ]
 }
