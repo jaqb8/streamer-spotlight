@@ -23,6 +23,7 @@ jobs:
       - name: Deploy to GitHub Pages
         uses: JamesIves/github-pages-deploy-action@4.1.1
         with:
+          REACT_APP_API_URL: ${{ secrets.REACT_APP_API_URL }}
           TOKEN: ${{ secrets.TOKEN }}
           BRANCH: gh-pages
           FOLDER: client/build
