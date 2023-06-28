@@ -49,39 +49,48 @@ const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   }, []);
 
   const login = async (username: string, password: string): Promise<void> => {
-    try {
-      const newToken = await AuthService.login(username, password);
-      setToken(newToken);
-      setIsAuthenticated(true);
-      const decodedToken: { id: string; username: string } =
-        jwtDecode(newToken);
-      setUser({
-        id: decodedToken.id,
-        username: decodedToken.username,
-      });
-    } catch (error) {
-      if (error instanceof AxiosError) {
-        toast.error(
-          error.response?.data?.message.toString() || "Something went wrong."
-        );
+    const loginPromise = AuthService.login(username, password);
+
+    toast.promise(
+      loginPromise.then((newToken) => {
+        setToken(newToken);
+        setIsAuthenticated(true);
+        const decodedToken: { id: string; username: string } =
+          jwtDecode(newToken);
+        setUser({
+          id: decodedToken.id,
+          username: decodedToken.username,
+        });
+      }),
+      {
+        loading: "Logging in...",
+        success: "Logged in!",
+        error: (error) => {
+          if (error instanceof AxiosError) {
+            return `Logging in failed: ${error.response?.data?.message.toString()}`;
+          }
+          return "Something went wrong.";
+        },
       }
-    }
+    );
   };
 
   const register = async (
     username: string,
     password: string
   ): Promise<void> => {
-    try {
-      await AuthService.register(username, password);
-      toast.success("Registered successfully! Please log in.");
-    } catch (error) {
-      if (error instanceof AxiosError) {
-        toast.error(
-          error.response?.data?.message.join(", ") || "Something went wrong."
-        );
-      }
-    }
+    const registerPromise = AuthService.register(username, password);
+
+    toast.promise(registerPromise, {
+      loading: "Signing up...",
+      success: "Account created! Please log in.",
+      error: (error) => {
+        if (error instanceof AxiosError) {
+          return `Registering failed: ${error.response?.data?.message.toString()}`;
+        }
+        return "Something went wrong.";
+      },
+    });
   };
 
   const logout = (): void => {

@@ -9,7 +9,7 @@ interface StreamersContextType {
   streamer: Streamer | undefined;
   fetchStreamers: () => Promise<void>;
   fetchStreamerById: (id: string) => Promise<void>;
-  createStreamer: (streamer: Partial<Streamer>) => Promise<void>;
+  createStreamer: (streamer: Partial<Streamer>) => void;
   voteForStreamer: (id: string, type: VoteType) => Promise<void>;
 }
 
@@ -43,20 +43,24 @@ const StreamersProvider: React.FC<StreamersProviderProps> = ({ children }) => {
     }
   };
 
-  const createStreamer = async (streamer: Partial<Streamer>): Promise<void> => {
-    try {
-      const newStreamer = await streamersService.createStreamer(streamer);
-      setStreamers([...streamers, newStreamer]);
-      toast.success("Streamer created!");
-    } catch (error) {
-      if (error instanceof AxiosError) {
-        toast.error(
-          `Creating streamer failed: ${
-            error.response?.data?.message.toString() || "Something went wrong."
-          }`
-        );
+  const createStreamer = (streamer: Partial<Streamer>): void => {
+    const newStreamerPromise = streamersService.createStreamer(streamer);
+
+    toast.promise(
+      newStreamerPromise.then((newStreamer) => {
+        setStreamers([...streamers, newStreamer]);
+      }),
+      {
+        loading: "Creating streamer...",
+        success: "Streamer created!",
+        error: (error) => {
+          if (error instanceof AxiosError) {
+            return `Creating streamer failed: ${error.response?.data?.message.toString()}`;
+          }
+          return "Creating streamer failed: Something went wrong.";
+        },
       }
-    }
+    );
   };
 
   const voteForStreamer = async (id: string, type: VoteType): Promise<void> => {
