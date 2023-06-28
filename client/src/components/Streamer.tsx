@@ -33,7 +33,8 @@ const Streamer = () => {
     if (id) {
       fetchStreamer(id);
     }
-  }, [id, fetchStreamer]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [id]);
 
   if (loading) {
     return <div>Loading...</div>;

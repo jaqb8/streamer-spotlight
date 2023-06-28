@@ -9,7 +9,8 @@ const StreamersList = () => {
 
   useEffect(() => {
     fetchStreamers();
-  }, [fetchStreamers]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   return (
     <>

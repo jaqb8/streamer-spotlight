@@ -14,11 +14,11 @@ import About from "./components/About";
 
 const router = createHashRouter([
   {
-    path: "/",
+    path: "",
     element: <Root />,
     children: [
       {
-        path: "",
+        path: "/",
         element: <App />,
       },
       {
